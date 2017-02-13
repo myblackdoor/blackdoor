@@ -1,0 +1,29 @@
+{
+  "name": "blackdoor",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pleasetrythisathome/blackdoor.git"
+  },
+  "keywords": [
+    "slack",
+    "slash command"
+  ],
+  "author": "Dylan Butman",
+  "bugs": {
+    "url": "https://github.com/pleasetrythisathome/blackdoor/issues"
+  },
+  "homepage": "https://github.com/pleasetrythisathome/blackdoor#readme",
+  "engines": {
+    "node": "6.9.5"
+  },
+  "dependencies": {
+    "botkit": "0.4.10"
+  }
+}
