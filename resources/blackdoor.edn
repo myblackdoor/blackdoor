@@ -1,0 +1,32 @@
+^{:cljs [:name
+         [:systems :cljs]
+         :server]}
+{:project "void"
+ :profile #or [#env PROFILE "dev"]
+ :name #join [^:ref [:project]
+              ^:ref [:profile]]
+ :secrets #include #join [#env HOME "/." ^:ref [:project] ".edn"]
+ :aws-access-key-id ^:ref [:secrets :aws-access-key-id]
+ :aws-secret-key ^:ref [:secrets :aws-secret-key]
+ :system {:clj  :server
+          :cljs :client}
+ :server {:protocol #profile {:dev "http://"
+                              :default "https://"}
+          :host #profile {:dev "localhost"
+                          :default #join [^:ref [:db-connection]
+                                          "."
+                                          #or [#env DOMAIN "elasticbeanstalk.com"]]}
+          :port #profile {:default 3000
+                          :test 3030}}
+ :datomic {:ephemeral? #profile {:default true
+                                 :staging false
+                                 :production false}
+           :db-name ^:ref [:project]
+           :uri #profile {:dev "datomic:dev://localhost:4334/"
+                          :default #join ["datomic:ddb://us-east-1/"
+                                          ^:ref [:name]
+                                          "/"]}}
+ :parser {:txes #profile {:staging []
+                          :production []
+                          :test []
+                          :dev []}}}

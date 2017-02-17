@@ -1,0 +1,51 @@
+machine:
+  java:
+    version: oraclejdk8
+  environment:
+    DATOMIC_VERSION: 0.9.5544
+
+dependencies:
+  pre:
+    - sudo apt-get update;
+    - sudo apt-get install unzip;
+    - bash build/datomic/install-datomic.sh -v ${DATOMIC_VERSION} -u ${DATOMIC_USER} -p
+    - sudo bash build/install-boot.sh
+    - npm install --global postcss-cli autoprefixer
+    - boot show -d:
+        timeout: 7200
+  override:
+    - mvn --fail-never dependency:go-offline || true
+  cache_directories:
+    - ~/.boot
+    - ~./datomic
+
+database:
+  override:
+    - boot template-datomic
+    - bash build/datomic/start-transactor.sh -v ${DATOMIC_VERSION} -c target/dev-transactor.properties:
+        background: true
+
+test:
+  override:
+    - boot test-all:
+        timeout: 1800
+
+deployment:
+  development:
+    branch: master
+    commands:
+      - boot package
+      - boot build-docker
+      - boot beanstalk -de blackdoor-dev
+  staging:
+    branch: staging
+    commands:
+      - boot package
+      - boot build-docker
+      - boot beanstalk -de blackdoor-staging
+  production:
+    branch: production
+    commands:
+      - boot package
+      - boot build-docker
+      - boot beanstalk -de blackdoor-prod

@@ -1,0 +1,5 @@
+{:require [void.main]
+ :compiler-options {:output-to "/public/js/main.js"
+                    :source-map "/public/js/main.js.map"
+                    :asset-path "/public/js/main.out"
+                    :source-map-path "/public/js/main.out"}}
